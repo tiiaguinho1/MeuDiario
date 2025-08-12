@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu Diário Pessoal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #ec4899;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --shadow: 0 10px 25px rgba(0,0,0,0.1);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.8); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+        }
+        
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header p {
+            opacity: 0.9;
+            font-size: 1.2rem;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .diary-form {
+            background: linear-gradient(145deg, #f8fafc, #f1f5f9);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255,255,255,0.8);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .diary-form::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+        
+        .form-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .form-header i {
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-right: 15px;
+        }
+        
+        .form-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark);
+            font-weight: 700;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--dark);
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: white;
+            transition: var(--transition);
+            color: var(--dark);
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        textarea {
+            min-height: 140px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+        
+        button i {
+            margin-left: 10px;
+        }
+        
+        .entries-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+        
+        .entries-header h2 {
+            font-size: 1.8rem;
+            color: var(--dark);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        
+        .entries-header h2 i {
+            margin-right: 12px;
+            color: var(--primary);
+        }
+        
+        .entry-count {
+            background: var(--primary);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .entries {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .entry {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: var(--transition);
+            border: 1px solid #f1f5f9;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .entry::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        
+        .entry:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+        }
+        
+        .entry:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .entry-date {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .entry-date i {
+            margin-right: 8px;
+        }
+        
+        .entry-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+            font-weight: 700;
+            line-height: 1.3;
+        }
+        
+        .entry-content {
+            color: var(--gray);
+            line-height: 1.7;
+            flex-grow: 1;
+            margin-bottom: 20px;
+        }
+        
+        .entry-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+        
+        .delete-btn {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .delete-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            transform: scale(1.1);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray);
+            grid-column: 1 / -1;
+        }
+        
+        .empty-state i {
+            font-size: 5rem;
+            margin-bottom: 25px;
+            color: #cbd5e1;
+        }
+        
+        .empty-state h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .empty-state p {
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: white;
+            color: var(--dark);
+            padding: 18px 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transform: translateX(150%);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid #10b981;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification i {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            color: #10b981;
+        }
+        
+        .notification.error {
+            border-left-color: #ef4444;
+        }
+        
+        .notification.error i {
+            color: #ef4444;
+        }
+        
+        @media (max-width: 768px) {
+            .entries {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .content {
+                padding: 25px;
+            }
+            
+            .diary-form {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Meu Diário Pessoal</h1>
+            <p>Um espaço para seus pensamentos, sonhos e memórias</p>
+        </header>
+        
+        <div class="content">
+            <div class="diary-form">
+                <div class="form-header">
+                    <i class="fas fa-feather-alt"></i>
+                    <h2>Nova Entrada</h2>
+                </div>
+                <form id="diaryForm">
+                    <div class="form-group">
+                        <label for="entryDate">Data</label>
+                        <input type="date" id="entryDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="entryTitle">Título (opcional)</label>
+                        <input type="text" id="entryTitle" placeholder="Dê um título para sua entrada">
+                    </div>
+                    <div class="form-group">
+                        <label for="entryContent">Conteúdo</label>
+                        <textarea id="entryContent" placeholder="Escreva seus pensamentos aqui..." required></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit">Adicionar ao Diário <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="entries-header">
+                <h2><i class="fas fa-book-open"></i> Minhas Entradas</h2>
+                <div class="entry-count" id="entryCount">0 entradas</div>
+            </div>
+            
+            <div class="entries" id="entriesContainer">
+                <div class="empty-state">
+                    <i class="fas fa-book"></i>
+                    <h3>Seu diário está vazio</h3>
+                    <p>Adicione sua primeira entrada usando o formulário acima. Cada momento é especial e merece ser registrado!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i>
+        <span>Entrada adicionada com sucesso!</span>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos do DOM
+            const diaryForm = document.getElementById('diaryForm');
+            const entryDate = document.getElementById('entryDate');
+            const entryTitle = document.getElementById('entryTitle');
+            const entryContent = document.getElementById('entryContent');
+            const entriesContainer = document.getElementById('entriesContainer');
+            const notification = document.getElementById('notification');
+            const entryCount = document.getElementById('entryCount');
+            
+            // Definir data atual como padrão
+            const today = new Date().toISOString().split('T')[0];
+            entryDate.value = today;
+            
+            // Carregar entradas salvas
+            loadEntries();
+            
+            // Evento de envio do formulário
+            diaryForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const date = entryDate.value;
+                const title = entryTitle.value.trim();
+                const content = entryContent.value.trim();
+                
+                if (!date || !content) {
+                    showNotification('Por favor, preencha os campos obrigatórios', 'error');
+                    return;
+                }
+                
+                // Criar nova entrada
+                const newEntry = {
+                    id: Date.now(),
+                    date: date,
+                    title: title,
+                    content: content,
+                    createdAt: new Date().toISOString()
+                };
+                
+                // Salvar no localStorage
+                saveEntry(newEntry);
+                
+                // Resetar formulário
+                diaryForm.reset();
+                entryDate.value = today;
+                
+                // Recarregar entradas
+                loadEntries();
+                
+                // Mostrar notificação
+                showNotification('Entrada adicionada com sucesso!');
+            });
+            
+            // Função para salvar entrada no localStorage
+            function saveEntry(entry) {
+                let entries = JSON.parse(localStorage.getItem('diaryEntries')) || [];
+                entries.unshift(entry); // Adicionar no início (mais recente primeiro)
+                localStorage.setItem('diaryEntries', JSON.stringify(entries));
+            }
+            
+            // Função para carregar entradas do localStorage
+            function loadEntries() {
+                const entries = JSON.parse(localStorage.getItem('diaryEntries')) || [];
+                
+                // Atualizar contador
+                entryCount.textContent = `${entries.length} ${entries.length === 1 ? 'entrada' : 'entradas'}`;
+                
+                if (entries.length === 0) {
+                    entriesContainer.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-book"></i>
+                            <h3>Seu diário está vazio</h3>
+                            <p>Adicione sua primeira entrada usando o formulário acima. Cada momento é especial e merece ser registrado!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                entriesContainer.innerHTML = '';
+                
+                entries.forEach(entry => {
+                    const entryElement = document.createElement('div');
+                    entryElement.className = 'entry';
+                    
+                    const formattedDate = new Date(entry.date).toLocaleDateString('pt-BR', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                    
+                    entryElement.innerHTML = `
+                        <div class="entry-date">
+                            <i class="fas fa-calendar-day"></i>
+                            ${formattedDate}
+                        </div>
+                        ${entry.title ? `<div class="entry-title">${entry.title}</div>` : ''}
+                        <div class="entry-content">${entry.content.replace(/\n/g, '<br>')}</div>
+                        <div class="entry-actions">
+                            <button class="delete-btn" data-id="${entry.id}" title="Excluir entrada">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    `;
+                    
+                    entriesContainer.appendChild(entryElement);
+                });
+                
+                // Adicionar evento de exclusão
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const entryId = parseInt(this.getAttribute('data-id'));
+                        deleteEntry(entryId);
+                    });
+                });
+            }
+            
+            // Função para excluir entrada
+            function deleteEntry(id) {
+                let entries = JSON.parse(localStorage.getItem('diaryEntries')) || [];
+                entries = entries.filter(entry => entry.id !== id);
+                localStorage.setItem('diaryEntries', JSON.stringify(entries));
+                loadEntries();
+                showNotification('Entrada excluída com sucesso!');
+            }
+            
+            // Função para mostrar notificação
+            function showNotification(message, type = 'success') {
+                const notificationEl = document.getElementById('notification');
+                const icon = notificationEl.querySelector('i');
+                const text = notificationEl.querySelector('span');
+                
+                text.textContent = message;
+                
+                if (type === 'error') {
+                    notificationEl.classList.add('error');
+                    icon.className = 'fas fa-exclamation-circle';
+                } else {
+                    notificationEl.classList.remove('error');
+                    icon.className = 'fas fa-check-circle';
+                }
+                
+                notificationEl.classList.add('show');
+                
+                setTimeout(() => {
+                    notificationEl.classList.remove('show');
+                }, 4000);
+            }
+        });
+    </script>
+</body>
+</html>
